@@ -38,4 +38,6 @@ function keyPressed() {
 function keyReleased() {
   tank.v.x = 0;
   tank.v.y = 0;
+  tank.sd.x = 0;
+  tank.sd.y = 0;
 }
