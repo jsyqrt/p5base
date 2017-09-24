@@ -1,13 +1,28 @@
 var tank;
+var bricks;
+
 function setup() {
   createCanvas(600, 600);
   tank = new Tank();
+  bricks = [];
+  for(var i=0; i<100; i++) {
+    bricks.push(new Brick());
+  }
 }
 
 function draw() {
   background(100);
-  tank.show();
   tank.move();
+  for(var i=0; i<bricks.length; i++) {
+    for(var j=0; j<tank.bullets.length; j++) {
+      if(tank.bullets[j].hits(bricks[i])) {
+        bricks.splice(i, 1);
+        tank.bullets.splice(j,1);
+      }
+    }
+    if(bricks[i]) bricks[i].show();
+  }
+  tank.show();
 }
 
 function keyPressed() {

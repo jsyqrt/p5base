@@ -1,15 +1,43 @@
+
+function Bullet() {
+  this.pos = createVector(0, 0);
+  this.r = 5;
+  this.v = createVector(0, 0);
+  this.c = createVector(255, 255, 255);
+  
+  this.show = function() {
+    fill(this.c.x, this.c.y, this.c.z);
+    noStroke();
+    ellipse(this.pos.x, this.pos.y, this.r*2, this.r*2);
+  }
+
+  this.move = function() {
+    this.pos.add(this.v);
+  }
+  
+  this.hits = function(brick) {
+    if(dist(this.pos.x, this.pos.y, brick.pos.x, brick.pos.y) <= this.r + brick.r*2) {
+      return true;
+    } else return false;
+  }
+}
+
 function Tank() {
   this.pos = createVector(width/2, height-20);
   this.v = createVector(0, 0);
   this.r = 10;
+  this.c = createVector(255, 0, 0);
   this.sd = createVector(0, 0); // shoot direction, (0, -1) up, (1, 0) right, (0, 1) down, (-1, 0) left.
   this.bullets = [];
   this.step = 3;
   this.bullet_step = 5;
   this.shoot_cycle = 2;
 
+  this.fresh = 0;
+  this.fresh_p = 5;
+
   this.show = function() {
-    fill(255, 0, 255);
+    fill(this.c.x, this.c.y, this.c.z);
     noStroke();
     ellipse(this.pos.x, this.pos.y, this.r*2, this.r*2);
     for(var i=0; i<this.bullets.length; i++) {
@@ -28,11 +56,14 @@ function Tank() {
   }
 
   this.move = function() {
-    var bullet = new Bullet();
-    var p = createVector(this.pos.x, this.pos.y);
-    bullet.pos = p;
-    bullet.v = this.sd.copy();
-    this.bullets.push(bullet);
+    if (this.fresh % this.fresh_p === 0) {
+      var bullet = new Bullet();
+      var p = createVector(this.pos.x, this.pos.y);
+      bullet.pos = p;
+      bullet.v = this.sd.copy();
+      this.bullets.push(bullet);
+    }
+    this.fresh += 1;
     for(var i=0; i<this.bullets.length; i++) {
       this.bullets[i].move();
     }
@@ -71,21 +102,5 @@ function Tank() {
     }
   }
     
-}
-
-function Bullet() {
-  this.pos = createVector(0, 0);
-  this.r = 1;
-  this.v = createVector(0, 0);
-  
-  this.show = function() {
-    fill(255, 255, 255);
-    noStroke();
-    ellipse(this.pos.x, this.pos.y, this.r*2, this.r*2);
-  }
-
-  this.move = function() {
-    this.pos.add(this.v);
-  }
 }
 
